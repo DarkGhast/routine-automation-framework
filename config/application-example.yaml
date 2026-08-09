@@ -1,0 +1,10 @@
+logging:
+  level: INFO
+
+tasks:
+  jm:
+    enabled: true
+
+notification:
+  enabled: true
+  type: console
