@@ -1,4 +1,19 @@
+# Python
 __pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
 .venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Local runtime configuration (may reference local secrets)
 config/application.yaml
-*.pyc
+
+# Logs
+*.log
+logs/

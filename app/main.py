@@ -1,33 +1,24 @@
-import tasks.demo
-import notification.console
-
 from app.bootstrap import Bootstrap
 from configuration.loader import load_config
 from core.executor import TaskExecutor
-from core.logging import init_logging, get_logger
+from core.logging import get_logger, init_logging
 from notification.service import NotificationService
 
 
 logger = get_logger(__name__)
 
 
-def main():
-    init_logging()
-
+def main() -> None:
     config = load_config()
+    init_logging(config.logging.level)
+
     bootstrap = Bootstrap(config)
+    results = TaskExecutor().execute(bootstrap.create_tasks())
 
-    results = TaskExecutor().execute(
-        bootstrap.create_tasks()
-    )
-
-    if NotificationService().should_send(
-        config.notification.policy,
-        results
-    ):
+    if NotificationService().should_send(config.notification, results):
         bootstrap.create_notification_channel().send(results)
 
-    logger.info(f"Executed tasks: {len(results)}")
+    logger.info("Executed tasks: %s", len(results))
 
 
 if __name__ == "__main__":

@@ -1,18 +1,22 @@
-_CHANNEL_REGISTRY = {}
+from configuration.exception import ConfigurationError
+from configuration.model import NotificationChannelConfig
+from configuration.resolver import ensure_env_resolved
+from notification.base import NotificationChannel
+from notification.console import ConsoleChannel
 
 
-def register_channel(name: str, channel_class: type):
-    _CHANNEL_REGISTRY[name] = channel_class
+CHANNEL_REGISTRY: dict[str, type[NotificationChannel]] = {
+    "console": ConsoleChannel,
+}
 
 
-def create_channel(config):
-    channel_type = config.type
+def create_channel(config: NotificationChannelConfig) -> NotificationChannel:
+    ensure_env_resolved(config.model_dump(), "notification.channel")
 
-    channel_class = _CHANNEL_REGISTRY.get(channel_type)
-
+    channel_class = CHANNEL_REGISTRY.get(config.type)
     if channel_class is None:
-        raise ValueError(
-            f"Unknown notification channel: {channel_type}"
+        raise ConfigurationError(
+            f"Unknown notification channel: {config.type}"
         )
 
     return channel_class(config.config)

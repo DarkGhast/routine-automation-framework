@@ -1,61 +1,86 @@
-# ==========================================
+# ============================================================
+# Routine Automation Framework 配置示例
+# ============================================================
+# 使用方式：
+# 1. 将本文件复制为 config/application.yaml
+# 2. 根据需要启用任务和通知
+# 3. 账号、密码、Token 等敏感值建议始终通过环境变量提供
+#
+# 环境变量占位符语法：
+#   ${ENV_NAME}          必须由环境变量提供；启用对应组件后若未提供会报错
+#   ${ENV_NAME:default}  环境变量不存在时使用 default
+# ============================================================
+
+
+# ============================================================
 # 日志配置
-# ==========================================
+# ============================================================
 logging:
-  # 日志等级:
-  # DEBUG: 调试信息
-  # INFO: 正常运行信息
-  # WARNING: 警告
-  # ERROR: 错误
+  # 日志等级，可填：DEBUG / INFO / WARNING / ERROR / CRITICAL
+  # 默认 INFO。也可以通过环境变量 LOG_LEVEL 覆盖。
   level: ${LOG_LEVEL:INFO}
 
 
-# ==========================================
+# ============================================================
 # 自动化任务配置
-# ==========================================
+# ============================================================
+# 每个任务统一采用：
+#   <任务名>:
+#     enabled: true/false
+#     config:
+#       ...该任务自己的配置...
+#
+# 只有 enabled=true 的任务才会校验其 config 中必需的环境变量。
+# 尚未实现的任务请不要启用，否则框架会明确报“任务未注册”。
 tasks:
 
-  # JM任务
+  # JM 示例（当前版本尚未接入真实 JM 实现，先保持注释）
+  # jm:
+  #   # 是否启用 JM 任务。
+  #   # 可通过 JM_ENABLED=true/false 控制；默认 true。
+  #   enabled: ${JM_ENABLED:true}
   #
-  # 环境变量:
-  # JM_USERNAME: JM账号
-  # JM_PASSWORD: JM密码
-  jm:
-    # 是否启用任务
-    enabled: ${JM_ENABLED:true}
-
-    # 任务私有配置
-    config:
-      username: ${JM_USERNAME}
-      password: ${JM_PASSWORD}
+  #   # JM 私有配置。
+  #   config:
+  #     # JM 登录账号。不要把真实账号直接提交到 Git。
+  #     username: ${JM_USERNAME}
+  #
+  #     # JM 登录密码。不要把真实密码直接提交到 Git。
+  #     password: ${JM_PASSWORD}
 
 
-# ==========================================
+# ============================================================
 # 通知配置
-# ==========================================
+# ============================================================
 notification:
+  # 是否启用通知。
+  # true  = 根据 policy 判断是否发送
+  # false = 完全不创建/发送通知渠道
+  # 可通过 NOTIFICATION_ENABLED 覆盖，默认 true。
+  enabled: ${NOTIFICATION_ENABLED:true}
 
-  # 是否启用通知
-  enabled: true
-
-  # 通知策略:
-  #
-  # always:
-  #   无论成功失败，任务结束后通知
-  #
-  # error_only:
-  #   只有失败任务时通知
+  # 通知策略，可填：
+  # always     = 每次任务执行结束都通知
+  # error_only = 只有出现 FAILED / TIMEOUT 时才通知
+  # 可通过 NOTIFICATION_POLICY 覆盖，默认 always。
   policy: ${NOTIFICATION_POLICY:always}
 
-
-  # 通知渠道
   channel:
-
-    # 渠道类型:
-    # console: 控制台输出
-    # 后续可扩展 telegram/email/bark
+    # 通知渠道类型。
+    # 当前支持：console
+    # 后续可扩展：telegram / email / bark 等。
+    # 可通过 NOTIFICATION_TYPE 覆盖，默认 console。
     type: ${NOTIFICATION_TYPE:console}
 
-    # 渠道专属配置
-    # 由具体channel自行解析
+    # 当前渠道的完整私有配置。
+    # 核心框架不会尝试理解这里的字段，由具体渠道实现自行解析。
+    #
+    # console 当前不需要额外配置，因此为空对象。
+    #
+    # 将来例如 Telegram 可能类似：
+    # config:
+    #   bot_token: ${TELEGRAM_BOT_TOKEN}
+    #   chat_id: ${TELEGRAM_CHAT_ID}
+    #
+    # Email 则可以拥有完全不同的 SMTP、模板等配置。
     config: {}

@@ -1,16 +1,17 @@
-from core.result import TaskStatus
+from configuration.model import NotificationConfig
+from core.result import TaskResult
 
 
 class NotificationService:
+    def should_send(
+        self,
+        config: NotificationConfig,
+        results: list[TaskResult],
+    ) -> bool:
+        if not config.enabled:
+            return False
 
-    def should_send(self, policy, results):
-        if policy == "always":
+        if config.policy == "always":
             return True
 
-        if policy == "error_only":
-            return any(
-                result.status == TaskStatus.FAILED
-                for result in results
-            )
-
-        return False
+        return any(result.status.is_error for result in results)

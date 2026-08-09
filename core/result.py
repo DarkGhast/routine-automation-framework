@@ -8,8 +8,12 @@ class TaskStatus(Enum):
     TIMEOUT = "TIMEOUT"
     SKIPPED = "SKIPPED"
 
+    @property
+    def is_error(self) -> bool:
+        return self in {TaskStatus.FAILED, TaskStatus.TIMEOUT}
 
-@dataclass
+
+@dataclass(slots=True)
 class TaskResult:
     task_name: str
     status: TaskStatus

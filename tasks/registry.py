@@ -1,21 +1,30 @@
 from dataclasses import dataclass
 
+from pydantic import BaseModel, ValidationError
 
-@dataclass
+from configuration.exception import ConfigurationError
+from configuration.model import ApplicationConfig
+from configuration.resolver import ensure_env_resolved
+from tasks.base import AutomationTask
+
+
+@dataclass(frozen=True, slots=True)
 class TaskDefinition:
-    task_class: type
-    config_class: type
+    task_class: type[AutomationTask]
+    config_class: type[BaseModel]
 
 
-TASK_REGISTRY = {}
+# Explicit registry. Real task implementations are added here as the project grows.
+# Example for a future JM task:
+#
+# from tasks.jm.config import JmConfig
+# from tasks.jm.task import JmTask
+# TASK_REGISTRY = {"jm": TaskDefinition(JmTask, JmConfig)}
+TASK_REGISTRY: dict[str, TaskDefinition] = {}
 
 
-def register_task(name, task_class, config_class):
-    TASK_REGISTRY[name] = TaskDefinition(task_class, config_class)
-
-
-def create_tasks(config):
-    tasks = []
+def create_tasks(config: ApplicationConfig) -> list[AutomationTask]:
+    tasks: list[AutomationTask] = []
 
     for name, item in config.tasks.items():
         if not item.enabled:
@@ -23,9 +32,19 @@ def create_tasks(config):
 
         definition = TASK_REGISTRY.get(name)
         if definition is None:
-            continue
+            raise ConfigurationError(
+                f"Enabled task is not registered: {name}"
+            )
 
-        task_config = definition.config_class.model_validate(item.config)
-        tasks.append(definition.task_class(task_config))
+        ensure_env_resolved(item.config, f"tasks.{name}.config")
+
+        try:
+            task_config = definition.config_class.model_validate(item.config)
+        except ValidationError as exc:
+            raise ConfigurationError(
+                f"Invalid configuration for task '{name}': {exc}"
+            ) from exc
+
+        tasks.append(definition.task_class(name, task_config))
 
     return tasks
