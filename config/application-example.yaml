@@ -1,15 +1,61 @@
+# ==========================================
+# 日志配置
+# ==========================================
 logging:
-  level: INFO
+  # 日志等级:
+  # DEBUG: 调试信息
+  # INFO: 正常运行信息
+  # WARNING: 警告
+  # ERROR: 错误
+  level: ${LOG_LEVEL:INFO}
 
+
+# ==========================================
+# 自动化任务配置
+# ==========================================
 tasks:
-  jm:
-    enabled: ${JM_ENABLED:true}
-    username: ${JM_USERNAME}
-    password: ${JM_PASSWORD}
 
+  # JM任务
+  #
+  # 环境变量:
+  # JM_USERNAME: JM账号
+  # JM_PASSWORD: JM密码
+  jm:
+    # 是否启用任务
+    enabled: ${JM_ENABLED:true}
+
+    # 任务私有配置
+    config:
+      username: ${JM_USERNAME}
+      password: ${JM_PASSWORD}
+
+
+# ==========================================
+# 通知配置
+# ==========================================
 notification:
+
+  # 是否启用通知
   enabled: true
+
+  # 通知策略:
+  #
+  # always:
+  #   无论成功失败，任务结束后通知
+  #
+  # error_only:
+  #   只有失败任务时通知
   policy: ${NOTIFICATION_POLICY:always}
+
+
+  # 通知渠道
   channel:
+
+    # 渠道类型:
+    # console: 控制台输出
+    # 后续可扩展 telegram/email/bark
     type: ${NOTIFICATION_TYPE:console}
+
+    # 渠道专属配置
+    # 由具体channel自行解析
     config: {}

@@ -4,12 +4,7 @@ from pydantic import BaseModel, Field
 
 class TaskItemConfig(BaseModel):
     enabled: bool = True
-    username: str | None = None
-    password: str | None = None
-
-
-class TasksConfig(BaseModel):
-    jm: TaskItemConfig | None = None
+    config: dict[str, Any] = Field(default_factory=dict)
 
 
 class NotificationChannelConfig(BaseModel):
@@ -23,11 +18,7 @@ class NotificationConfig(BaseModel):
     channel: NotificationChannelConfig
 
 
-class LoggingConfig(BaseModel):
-    level: str = "INFO"
-
-
 class ApplicationConfig(BaseModel):
-    logging: LoggingConfig
-    tasks: TasksConfig
+    logging: dict[str, Any] = Field(default_factory=dict)
+    tasks: dict[str, TaskItemConfig] = Field(default_factory=dict)
     notification: NotificationConfig
