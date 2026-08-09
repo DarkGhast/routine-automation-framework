@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 
-class NotificationProvider(ABC):
+class NotificationChannel(ABC):
 
     @abstractmethod
-    def send(self, message: str):
+    def send(self, context, config: dict):
         raise NotImplementedError

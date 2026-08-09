@@ -3,8 +3,13 @@ logging:
 
 tasks:
   jm:
-    enabled: true
+    enabled: ${JM_ENABLED:true}
+    username: ${JM_USERNAME}
+    password: ${JM_PASSWORD}
 
 notification:
   enabled: true
-  type: console
+  policy: ${NOTIFICATION_POLICY:always}
+  channel:
+    type: ${NOTIFICATION_TYPE:console}
+    config: {}

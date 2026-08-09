@@ -14,4 +14,3 @@ class TaskResult:
     task_name: str
     status: TaskStatus
     message: str
-    duration_ms: int | None = None
