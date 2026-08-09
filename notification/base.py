@@ -4,5 +4,5 @@ from abc import ABC, abstractmethod
 class NotificationChannel(ABC):
 
     @abstractmethod
-    def send(self, context, config: dict):
+    def send(self, context):
         raise NotImplementedError
