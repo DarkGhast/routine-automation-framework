@@ -1,28 +1,30 @@
 # 可直接运行：python -m app.main --config config/application-example.yaml
-# 三个示例均不联网、不需要账号，直接返回业务结果，不抛出模拟异常。
+# JMComic 默认禁用；离线演示任务已备份到 application-test.yaml。
 logging:
   level: ${LOG_LEVEL:INFO}
 
 tasks:
   # 键是实例名，type 对应 plugins/<type>/plugin.py。
   # 同一 type 可以配置多个实例；未填写 type 时使用实例名。
-  success:
-    type: demo_success
-    enabled: true
+  jm:
+    type: jmcomic
+    enabled: false
     config:
-      message: 签到成功（模拟）
-
-  already_signed:
-    type: demo_already_signed
-    enabled: true
-    config:
-      message: 今日已签到，无需重复签到（模拟）
-
-  failure:
-    type: demo_failure
-    enabled: true
-    config:
-      message: 签到失败（模拟）
+      username: ${JM_USERNAME}
+      password: ${JM_PASSWORD}
+      timeout: 20
+      max_retries: 1
+      # -1、false 或 0 不等待；正整数表示随机等待 0～N 秒，仅在任务开始时等待一次。
+      random_delay_seconds: -1
+      # 内嵌网络选项，省略时自动获取域名并使用系统代理。
+      jmcomic_config: {}
+      # jmcomic_config:
+      #   domains: [api.example.com]
+      #   proxies:
+      #     http: ${JM_PROXY_URL}
+      #     https: ${JM_PROXY_URL}
+      #   headers:
+      #     User-Agent: your-user-agent
 
 notification:
   enabled: ${NOTIFICATION_ENABLED:true}

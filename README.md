@@ -14,7 +14,7 @@
 无需账号即可运行三个离线示例：
 
 ```bash
-python -m app.main --config config/application-example.yaml
+python -m app.main --config config/application-test.yaml
 ```
 
 预期控制台通知内容（显示在带留白的通知区域内）：
@@ -40,7 +40,7 @@ WARNING 为亮黄色，ERROR 为亮红色，CRITICAL 为加粗亮白字配红底
 需要比较各等级日志颜色时，在运行参数后添加 --preview-logging：
 
 ```bash
-python -m app.main --config config/application-example.yaml --preview-logging
+python -m app.main --config config/application-test.yaml --preview-logging
 ```
 
 该参数在执行任务前展示 DEBUG / INFO / WARNING / ERROR / CRITICAL，
@@ -50,14 +50,15 @@ python -m app.main --config config/application-example.yaml --preview-logging
 三个模块固定模拟各自场景，不访问真实站点，也不保存签到状态。
 重复签到表示服务端已报告当天完成，映射为 SKIPPED，不视为错误。
 
-实际使用时可复制示例为 config/application.yaml，再运行：
+实际使用时可复制 config/application-example.yaml 为 config/application.yaml，
+安装所需插件的依赖并配置账号、启用任务后，再运行：
 
 ```bash
 python -m app.main
 ```
 
-已有本地 application.yaml 不会自动迁移；旧的 jm 配置需要手动替换或禁用。
-项目已移除 JM 实现及专用 Playwright 探针。
+已有本地 application.yaml 不会自动迁移。新示例仅包含默认禁用的 JMComic 任务，
+接入方式、专用依赖与脱敏联调见 [JMComic 插件说明](plugins/jmcomic/README.md)。
 
 ## 本地插件约定
 
@@ -70,8 +71,14 @@ plugins/
 ├── demo_already_signed/
 │   ├── __init__.py
 │   └── plugin.py
-└── demo_failure/
+├── demo_failure/
+│   ├── __init__.py
+│   └── plugin.py
+└── jmcomic/
     ├── __init__.py
+    ├── config.py
+    ├── client.py
+    ├── task.py
     └── plugin.py
 ```
 

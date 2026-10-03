@@ -9,7 +9,7 @@ from notification.service import NotificationService
 from tasks.registry import create_tasks
 
 
-EXAMPLE_CONFIG = Path(__file__).resolve().parents[1] / "config" / "application-example.yaml"
+EXAMPLE_CONFIG = Path(__file__).resolve().parents[1] / "config" / "application-test.yaml"
 
 
 def test_example_config_runs_all_three_scenarios():
