@@ -1,86 +1,36 @@
-# ============================================================
-# Routine Automation Framework 配置示例
-# ============================================================
-# 使用方式：
-# 1. 将本文件复制为 config/application.yaml
-# 2. 根据需要启用任务和通知
-# 3. 账号、密码、Token 等敏感值建议始终通过环境变量提供
-#
-# 环境变量占位符语法：
-#   ${ENV_NAME}          必须由环境变量提供；启用对应组件后若未提供会报错
-#   ${ENV_NAME:default}  环境变量不存在时使用 default
-# ============================================================
-
-
-# ============================================================
-# 日志配置
-# ============================================================
+# 可直接运行：python -m app.main --config config/application-example.yaml
+# 三个示例均不联网、不需要账号，直接返回业务结果，不抛出模拟异常。
 logging:
-  # 日志等级，可填：DEBUG / INFO / WARNING / ERROR / CRITICAL
-  # 默认 INFO。也可以通过环境变量 LOG_LEVEL 覆盖。
   level: ${LOG_LEVEL:INFO}
 
-
-# ============================================================
-# 自动化任务配置
-# ============================================================
-# 每个任务统一采用：
-#   <任务名>:
-#     enabled: true/false
-#     config:
-#       ...该任务自己的配置...
-#
-# 只有 enabled=true 的任务才会校验其 config 中必需的环境变量。
-# 尚未实现的任务请不要启用，否则框架会明确报“任务未注册”。
 tasks:
+  # 键是实例名，type 对应 plugins/<type>/plugin.py。
+  # 同一 type 可以配置多个实例；未填写 type 时使用实例名。
+  success:
+    type: demo_success
+    enabled: true
+    config:
+      message: 签到成功（模拟）
 
-  # JM 示例（当前版本尚未接入真实 JM 实现，先保持注释）
-  # jm:
-  #   # 是否启用 JM 任务。
-  #   # 可通过 JM_ENABLED=true/false 控制；默认 true。
-  #   enabled: ${JM_ENABLED:true}
-  #
-  #   # JM 私有配置。
-  #   config:
-  #     # JM 登录账号。不要把真实账号直接提交到 Git。
-  #     username: ${JM_USERNAME}
-  #
-  #     # JM 登录密码。不要把真实密码直接提交到 Git。
-  #     password: ${JM_PASSWORD}
+  already_signed:
+    type: demo_already_signed
+    enabled: true
+    config:
+      message: 今日已签到，无需重复签到（模拟）
 
+  failure:
+    type: demo_failure
+    enabled: true
+    config:
+      message: 签到失败（模拟）
 
-# ============================================================
-# 通知配置
-# ============================================================
 notification:
-  # 是否启用通知。
-  # true  = 根据 policy 判断是否发送
-  # false = 完全不创建/发送通知渠道
-  # 可通过 NOTIFICATION_ENABLED 覆盖，默认 true。
   enabled: ${NOTIFICATION_ENABLED:true}
-
-  # 通知策略，可填：
-  # always     = 每次任务执行结束都通知
-  # error_only = 只有出现 FAILED / TIMEOUT 时才通知
-  # 可通过 NOTIFICATION_POLICY 覆盖，默认 always。
+  # error_only 仅在出现 FAILED / TIMEOUT 时发送，重复签到不算错误。
   policy: ${NOTIFICATION_POLICY:always}
-
   channel:
-    # 通知渠道类型。
-    # 当前支持：console
-    # 后续可扩展：telegram / email / bark 等。
-    # 可通过 NOTIFICATION_TYPE 覆盖，默认 console。
-    type: ${NOTIFICATION_TYPE:console}
-
-    # 当前渠道的完整私有配置。
-    # 核心框架不会尝试理解这里的字段，由具体渠道实现自行解析。
-    #
-    # console 当前不需要额外配置，因此为空对象。
-    #
-    # 将来例如 Telegram 可能类似：
-    # config:
-    #   bot_token: ${TELEGRAM_BOT_TOKEN}
-    #   chat_id: ${TELEGRAM_CHAT_ID}
-    #
-    # Email 则可以拥有完全不同的 SMTP、模板等配置。
+    type: console
     config: {}
+
+# 实际插件可在 config 中使用 ${ENV_NAME} 或 ${ENV_NAME:default}。
+# enabled=false 的任务不会导入模块，也不检查其私有配置中的环境变量。

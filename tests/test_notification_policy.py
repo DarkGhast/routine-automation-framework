@@ -11,6 +11,8 @@ from notification.service import NotificationService
         ("always", [TaskStatus.SUCCESS, TaskStatus.SUCCESS], True),
         ("always", [TaskStatus.SUCCESS, TaskStatus.FAILED], True),
         ("error_only", [TaskStatus.SUCCESS, TaskStatus.SUCCESS], False),
+        ("error_only", [TaskStatus.SUCCESS, TaskStatus.SKIPPED], False),
+        ("error_only", [TaskStatus.SKIPPED], False),
         ("error_only", [TaskStatus.SUCCESS, TaskStatus.FAILED], True),
         ("error_only", [TaskStatus.SUCCESS, TaskStatus.TIMEOUT], True),
     ],

@@ -17,6 +17,8 @@ class LoggingConfig(StrictModel):
 
 
 class TaskItemConfig(StrictModel):
+    # 未指定类型时使用任务实例名，兼容原有配置结构。
+    type: str | None = None
     enabled: bool = True
     config: dict[str, Any] = Field(default_factory=dict)
 

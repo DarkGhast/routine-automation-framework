@@ -25,16 +25,24 @@ class TimeoutTask(AutomationTask):
         raise TaskTimeoutError("timed out")
 
 
-def test_executor_preserves_task_names_and_failure_statuses():
+def test_executor_preserves_task_names_and_failure_statuses(caplog):
     results = TaskExecutor().execute([
         SuccessTask("success"),
         FailedTask("failed"),
         TimeoutTask("timeout"),
+        SuccessTask("after_errors"),
     ])
 
-    assert [result.task_name for result in results] == ["success", "failed", "timeout"]
+    assert [result.task_name for result in results] == [
+        "success", "failed", "timeout", "after_errors",
+    ]
     assert [result.status for result in results] == [
         TaskStatus.SUCCESS,
         TaskStatus.FAILED,
         TaskStatus.TIMEOUT,
+        TaskStatus.SUCCESS,
     ]
+    # 程序异常保留堆栈供排查，并且不会中断后续任务。
+    errors = [record for record in caplog.records if record.name == "core.executor"]
+    assert len(errors) == 2
+    assert all(record.exc_info is not None for record in errors)
