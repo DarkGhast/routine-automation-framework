@@ -45,6 +45,7 @@ def test_cli_runs_example_and_sends_console_results(monkeypatch, capsys):
     monkeypatch.setenv("LOG_LEVEL", "INFO")
     monkeypatch.setenv("NOTIFICATION_ENABLED", "true")
     monkeypatch.setenv("NOTIFICATION_POLICY", "always")
+    monkeypatch.setenv("NO_COLOR", "1")
     main(["--config", str(EXAMPLE_CONFIG)])
     captured = capsys.readouterr()
     output = captured.out
@@ -53,3 +54,7 @@ def test_cli_runs_example_and_sends_console_results(monkeypatch, capsys):
     assert "failure: FAILED - 签到失败（模拟）" in output
     assert "ERROR" not in captured.err
     assert "Traceback" not in captured.err
+    assert "ERROR" not in output
+    assert "Traceback" not in output
+    assert "任务执行通知" in output
+    assert "共 3 项 | 成功 1 | 跳过 1 | 失败 1 | 超时 0" in output

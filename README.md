@@ -14,13 +14,34 @@
 python -m app.main --config config/application-example.yaml
 ```
 
-预期控制台结果：
+预期控制台通知内容（显示在带留白的通知区域内）：
 
 ```text
 success: SUCCESS - 签到成功（模拟）
 already_signed: SKIPPED - 今日已签到，无需重复签到（模拟）
 failure: FAILED - 签到失败（模拟）
 ```
+
+日志继续使用 Python 标准库 logging，由 core/logging.py 统一配置，
+格式为“时间 | 等级 | 模块 | 消息”。日志和控制台通知均输出到 stdout，
+避免 PyCharm 将普通 INFO 日志按标准错误流显示为红色。
+支持颜色的终端、PyCharm 和 GitHub Actions 中，DEBUG 为灰色，INFO 使用主题默认文字色，
+WARNING 为亮黄色，ERROR 为亮红色，CRITICAL 为加粗亮白字配红底，逐级增强提示。
+控制台通知使用青色上下横线与左侧竖线，包含汇总和逐项结果。
+长消息按估算的终端宽度换行。由于 IDE 中英文回退字体宽度可能不同，
+不绘制依赖空格补齐的右边框，避免右侧参差不齐。
+
+重定向到文件时默认不输出颜色控制符。可以设置 NO_COLOR=1 禁用颜色，
+或 FORCE_COLOR=1 强制启用（NO_COLOR 优先）。
+
+需要比较各等级日志颜色时，在运行参数后添加 --preview-logging：
+
+```bash
+python -m app.main --config config/application-example.yaml --preview-logging
+```
+
+该参数在执行任务前展示 DEBUG / INFO / WARNING / ERROR / CRITICAL，
+每条都标注为样式预览，不抛异常；移除参数后恢复正常输出。
 
 失败模块直接返回 FAILED 业务结果，不抛异常、不产生异常堆栈。
 三个模块固定模拟各自场景，不访问真实站点，也不保存签到状态。
