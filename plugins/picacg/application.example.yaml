@@ -1,0 +1,12 @@
+tasks:
+  picacg_daily:
+    type: picacg
+    enabled: true
+    config:
+      username: ${PICA_USERNAME}
+      password: ${PICA_PASSWORD}
+      timeout: 15
+      max_retries: 2
+      proxy_mode: system
+notification:
+  enabled: false

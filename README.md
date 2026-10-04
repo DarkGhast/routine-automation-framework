@@ -57,8 +57,9 @@ python -m app.main --config config/application-test.yaml --preview-logging
 python -m app.main
 ```
 
-已有本地 application.yaml 不会自动迁移。新示例仅包含默认禁用的 JMComic 任务，
-接入方式、专用依赖与脱敏联调见 [JMComic 插件说明](plugins/jmcomic/README.md)。
+已有本地 application.yaml 不会自动迁移。新示例包含默认禁用的 JMComic 和 PicACG 任务，
+接入方式见 [JMComic 插件说明](plugins/jmcomic/README.md) 和
+[PicACG 插件说明](plugins/picacg/README.md)。
 
 ## 本地插件约定
 
@@ -73,6 +74,13 @@ plugins/
 │   └── plugin.py
 ├── demo_failure/
 │   ├── __init__.py
+│   └── plugin.py
+├── picacg/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── client.py
+│   ├── audit.py
+│   ├── task.py
 │   └── plugin.py
 └── jmcomic/
     ├── __init__.py

@@ -1,0 +1,18 @@
+{
+  "observed_at_utc": "2026-10-03T20:25:51.038311+00:00",
+  "http_status": 200,
+  "response": {
+    "code": 200,
+    "message": "success",
+    "data": {
+      "res": {
+        "status": "fail"
+      }
+    }
+  },
+  "verification": {
+    "isPunched_before": true,
+    "isPunched_after": true,
+    "exp_delta": 0
+  }
+}

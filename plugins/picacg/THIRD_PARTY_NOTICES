@@ -1,0 +1,36 @@
+签名算法、协议常量及请求头改编自：
+https://github.com/jckling/Daily-Bonus/blob/d3060b7add1f81197211c65ebb907ef8e4e4975b/checkin/pica.py
+
+查阅版本：d3060b7add1f81197211c65ebb907ef8e4e4975b（2026-09-24）
+相关文件修改：6b1af6b87e4954212f94ae50b48ea93b0b75270a（2026-07-15）、
+7f5b3683d555aca5744e28f250190bf99a54f986（2026-09-23）。
+网络辅助代码 checkin/net.py 仅审阅，没有复用其可达性判定。
+
+备用协议交叉参考：ewigl/picacg-auto-checkin 的 main.js，
+仓库版本 5b3c488e8bb614c53ec94f48313c3eec7a80fb9c，
+该文件最新修改 3f6089802af5106bc8f826109b41591245f4b9dc。
+未找到该仓库的许可证，不复制其实现。
+
+以下为 Daily-Bonus 的原始许可：
+
+MIT License
+
+Copyright (c) 2022 Jck
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

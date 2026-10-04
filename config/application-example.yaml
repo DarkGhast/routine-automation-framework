@@ -1,9 +1,19 @@
 # 可直接运行：python -m app.main --config config/application-example.yaml
-# JMComic 默认禁用；离线演示任务已备份到 application-test.yaml。
+# 真实站点任务默认禁用；离线演示任务已备份到 application-test.yaml。
 logging:
   level: ${LOG_LEVEL:INFO}
 
 tasks:
+  picacg:
+    type: picacg
+    enabled: false
+    config:
+      # 由框架统一解析环境变量，不自动加载 .env。
+      username: ${PICA_USERNAME}
+      password: ${PICA_PASSWORD}
+      timeout: 15
+      max_retries: 2
+      proxy_mode: system
   # 键是实例名，type 对应 plugins/<type>/plugin.py。
   # 同一 type 可以配置多个实例；未填写 type 时使用实例名。
   jm:

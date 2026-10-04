@@ -125,7 +125,8 @@ def test_example_is_disabled_without_credentials(monkeypatch):
     monkeypatch.delenv("JM_PASSWORD", raising=False)
     root = Path(__file__).resolve().parents[1]
     cfg = load_config(root / "config/application-example.yaml")
-    assert list(cfg.tasks) == ["jm"]
+    # 公共示例允许新增其他站点，JM 的默认禁用约定保持不变。
+    assert "jm" in cfg.tasks
     assert cfg.tasks["jm"].enabled is False
     assert create_tasks(cfg) == []
 
