@@ -164,7 +164,8 @@ enabled 默认 true，config 默认空字典。StrictModel 会拒绝未声明字
 - 程序异常由执行器捕获并记录堆栈：普通异常转为 FAILED，TaskTimeoutError 转为 TIMEOUT，后续任务继续执行。
 - 插件也可以直接返回 SUCCESS / FAILED / TIMEOUT / SKIPPED。
 - 执行器不会主动中断超时任务；具体模块需要设置请求超时等限制，并自行释放会话等资源。
-- 通知支持 always / error_only，当前渠道为 console。错误通知会包含本批全部结果。
+- 通知支持多渠道独立配置 always / error_only；已提供 console 和 email。错误通知包含本批全部结果。
+  配置示例、SMTP 接入及扩展方法见 [通知配置与插件开发](docs/notification-development.md)。
 - 当前任务执行失败会记录到结果，但不据此设置非零进程退出码。
   GitHub Actions 若要将任务失败标记为工作流失败，后续还需增加退出码策略。
 

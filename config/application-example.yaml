@@ -38,11 +38,26 @@ tasks:
 
 notification:
   enabled: ${NOTIFICATION_ENABLED:true}
-  # error_only 仅在出现 FAILED / TIMEOUT 时发送，重复签到不算错误。
-  policy: ${NOTIFICATION_POLICY:always}
-  channel:
-    type: console
-    config: {}
+  channels:
+    screen:
+      type: console
+      policy: always
+      config: {}
+    failure_mail:
+      type: email
+      # 配置 SMTP 环境变量后启用；成功或重复签到不会发邮件。
+      enabled: false
+      policy: error_only
+      config:
+        host: ${SMTP_HOST}
+        port: 465
+        security: ssl
+        username: ${SMTP_USERNAME}
+        password: ${SMTP_PASSWORD}
+        sender: ${MAIL_FROM}
+        sender_name: 日常签到助手
+        recipients: ["${MAIL_TO}"]
+        subject: 日常签到失败通知
+        timeout: 20
 
-# 实际插件可在 config 中使用 ${ENV_NAME} 或 ${ENV_NAME:default}。
-# enabled=false 的任务不会导入模块，也不检查其私有配置中的环境变量。
+# 通知详细配置与开发说明：docs/notification-development.md

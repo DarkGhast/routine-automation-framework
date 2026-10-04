@@ -31,8 +31,7 @@ def main(argv: list[str] | None = None) -> None:
 
     logger.info("任务执行结束，共 %s 项", len(results))
 
-    if NotificationService().should_send(config.notification, results):
-        bootstrap.create_notification_channel().send(results)
+    NotificationService().send(config.notification, results)
 
 
 if __name__ == "__main__":

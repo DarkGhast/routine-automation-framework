@@ -1,5 +1,6 @@
-# 可直接运行：python -m app.main --config config/application-example.yaml
-# 三个示例均不联网、不需要账号，直接返回业务结果，不抛出模拟异常。
+# 可直接运行：python -m app.main --config config/application-test.yaml
+# 三个任务均不联网、不需要账号，直接返回业务结果，不抛出模拟异常。
+# 邮件默认关闭；设置 MAIL_ENABLED=true 并填写 SMTP 环境变量后，会发送真实测试邮件。
 logging:
   level: ${LOG_LEVEL:INFO}
 
@@ -26,11 +27,29 @@ tasks:
 
 notification:
   enabled: ${NOTIFICATION_ENABLED:true}
-  # error_only 仅在出现 FAILED / TIMEOUT 时发送，重复签到不算错误。
-  policy: ${NOTIFICATION_POLICY:always}
-  channel:
-    type: console
-    config: {}
+  channels:
+    screen:
+      type: console
+      enabled: true
+      policy: always
+      config: {}
+    failure_mail:
+      type: email
+      enabled: ${MAIL_ENABLED:false}
+      # failure 任务启用时发邮件；将该任务 enabled 改为 false，可验证成功/跳过不发邮件。
+      policy: error_only
+      config:
+        host: ${SMTP_HOST}
+        # SSL 通常用 465；STARTTLS 通常用 587，需要同时调整端口和 security。
+        port: ${SMTP_PORT:465}
+        security: ${SMTP_SECURITY:ssl}
+        username: ${SMTP_USERNAME}
+        password: ${SMTP_PASSWORD}
+        sender: ${MAIL_FROM}
+        sender_name: 日常签到助手
+        recipients: ["${MAIL_TO}"]
+        subject: "[框架测试] 模拟签到失败通知"
+        timeout: 20
 
 # 实际插件可在 config 中使用 ${ENV_NAME} 或 ${ENV_NAME:default}。
 # enabled=false 的任务不会导入模块，也不检查其私有配置中的环境变量。
